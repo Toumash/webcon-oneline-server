@@ -9,18 +9,28 @@ SCRIPT
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  #   http://www.vagrantbox.es/
-  config.vm.box = "gusztavvargadr/windows-server"
+  # Box list: https://github.com/gusztavvargadr/workstations
 
-  #TODO: following line does not work, lets find a better way to copy the installer to the machine
-  # maybe a standard download using powershell would be better?
-  # but then we need an s3/ftp/http server
+  # uncomment this line if you want to develop again server with separate SQL installation
+  # config.vm.box = "gusztavvargadr/windows-server"
+  # For integrated standalone one-vm setup
+  config.vm.box = "gusztavvargadr/sql-server"
+
+  config.vm.define "webcon-web"
+  config.vm.hostname = "webcon-web"
+
+  # DONT DO THE FOLLOWING! The best way to copy files on windows is SAMBA, use additionally S3/FTP/HTTP if needed
   # config.vm.provision "file", source: "WebconBPS.zip", destination: "WebconBPS.zip"
 
-  config.vm.synced_folder "source", "/install", type: "smb", mount_options: ["domain=" + ENV["USERDOMAIN"]]
+  config.vm.synced_folder ".", "/vagrant", type: "smb", mount_options: ["domain=" + ENV["USERDOMAIN"]]
 
+  config.vm.provision "ansible_local" do |ansible|
+    ansible.playbook = "source/playbook.yml"
+  end
   # Chocolately is already installed on the box
   # config.vm.provision "shell", path: "source/InstallChocolately.ps1"
+  config.vm.provision "shell", path: "source/InstallWebcon.ps1"
+
   # config.vm.provision "shell", inline: $script
 
   # The url from where the 'config.vm.box' box will be fetched if it
@@ -38,6 +48,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.network :private_network, ip: "192.168.58.111"
 
   config.vm.provider :hyperv do |h|
+
     # Don't boot with headless mode
     #   vb.gui = true
     h.memory = 1024
