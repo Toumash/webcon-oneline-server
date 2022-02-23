@@ -16,7 +16,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # maybe a standard download using powershell would be better?
   # but then we need an s3/ftp/http server
   # config.vm.provision "file", source: "WebconBPS.zip", destination: "WebconBPS.zip"
-  config.vm.provision "shell", inline: $script
+
+  config.vm.synced_folder "source", "/install", type: "smb", mount_options: ["domain=" + ENV["USERDOMAIN"]]
+
+  # Chocolately is already installed on the box
+  # config.vm.provision "shell", path: "source/InstallChocolately.ps1"
+  # config.vm.provision "shell", inline: $script
 
   # The url from where the 'config.vm.box' box will be fetched if it
   # doesn't already exist on the user's system.
@@ -32,16 +37,18 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # config.vm.network "private_network", ip: "192.168.33.10"
   config.vm.network :private_network, ip: "192.168.58.111"
 
-  config.vm.provider :hyperv do |vb|
+  config.vm.provider :hyperv do |h|
     # Don't boot with headless mode
     #   vb.gui = true
-    vb.memory = 1024
-    vb.cpus = 4
-    vb.vm_integration_services = {
+    h.memory = 1024
+    h.cpus = 4
+    h.vm_integration_services = {
       guest_service_interface: true,
     }
+    h.enable_virtualization_extensions = true
+    h.linked_clone = true
 
-    vb.enable_enhanced_session_mode = true
+    h.enable_enhanced_session_mode = true
   end
 
   #
