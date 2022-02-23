@@ -12,7 +12,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   #   http://www.vagrantbox.es/
   config.vm.box = "gusztavvargadr/windows-server"
 
-  config.vm.provision "file", source: "WebconBPS.zip", destination: "WebconBPS.zip"
+  #TODO: following line does not work, lets find a better way to copy the installer to the machine
+  # maybe a standard download using powershell would be better?
+  # but then we need an s3/ftp/http server
+  # config.vm.provision "file", source: "WebconBPS.zip", destination: "WebconBPS.zip"
   config.vm.provision "shell", inline: $script
 
   # The url from where the 'config.vm.box' box will be fetched if it
