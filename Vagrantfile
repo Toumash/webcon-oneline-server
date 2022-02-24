@@ -24,12 +24,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.synced_folder ".", "/vagrant", type: "smb", mount_options: ["domain=" + ENV["USERDOMAIN"]]
 
-  config.vm.provision "ansible_local" do |ansible|
-    ansible.playbook = "source/playbook.yml"
-  end
   # Chocolately is already installed on the box
   # config.vm.provision "shell", path: "source/InstallChocolately.ps1"
-  config.vm.provision "shell", path: "source/InstallWebcon.ps1"
+  config.vm.provision "shell", privileged: "true", powershell_elevated_interactive: "true", path: "source/InstallWebcon.ps1"
+  config.vm.provision "shell", privileged: "true", powershell_elevated_interactive: "true", path: "source/configureAutologon.ps1"
 
   # config.vm.provision "shell", inline: $script
 
@@ -42,9 +40,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # accessing "localhost:8080" will access port 80 on the guest machine.
   # config.vm.network "forwarded_port", guest: 80, host: 8080
 
-  # Create a private network, which allows host-only access to the machine
-  # using a specific IP.
-  # config.vm.network "private_network", ip: "192.168.33.10"
+  # Create a private network, which allows host-only access to the machine using a specific IP.
   config.vm.network :private_network, ip: "192.168.58.111"
 
   config.vm.provider :hyperv do |h|
@@ -62,33 +58,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     h.enable_enhanced_session_mode = true
   end
 
-  #
-  # View the documentation for the provider you're using for more
-  # information on available options.
-
-  # Enable provisioning with Puppet stand alone.  Puppet manifests
-  # are contained in a directory path relative to this Vagrantfile.
-  # You will need to create the manifests directory and a manifest in
-  # the file centos65.pp in the manifests_path directory.
-  #
-  # An example Puppet manifest to provision the message of the day:
-  #
-  # # group { "puppet":
-  # #   ensure => "present",
-  # # }
-  # #
-  # # File { owner => 0, group => 0, mode => 0644 }
-  # #
-  # # file { '/etc/motd':
-  # #   content => "Welcome to your Vagrant-built virtual machine!
-  # #               Managed by Puppet.\n"
-  # # }
-  #
-  # config.vm.provision "puppet" do |puppet|
-  #   puppet.manifests_path = "manifests"
-  #   puppet.manifest_file  = "site.pp"
-  # end
-
   # Enable provisioning with chef solo, specifying a cookbooks path, roles
   # path, and data_bags path (all relative to this Vagrantfile), and adding
   # some recipes and/or roles.
@@ -103,6 +72,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   #   # You may also specify custom JSON attributes:
   #   chef.json = { :mysql_password => "foo" }
   # end
+
+  # CHEF SERVER CONFIGURATION
 
   # Enable provisioning with chef server, specifying the chef server URL,
   # and the path to the validation key (relative to this Vagrantfile).
