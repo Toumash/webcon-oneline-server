@@ -9,3 +9,9 @@ batch "disable-firewall" do
       netsh advfirewall set allprofiles state off
       EOH
 end
+
+windows_feature "Web-Server" do
+  all true
+  action :install
+  install_method :windows_feature_powershell
+end
