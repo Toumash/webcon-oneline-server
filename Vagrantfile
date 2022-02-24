@@ -47,7 +47,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     # Don't boot with headless mode
     #   vb.gui = true
-    h.memory = 1024
+    h.memory = 2048
     h.cpus = 4
     h.vm_integration_services = {
       guest_service_interface: true,
