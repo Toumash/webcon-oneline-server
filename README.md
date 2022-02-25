@@ -1,5 +1,7 @@
-# webcon-oneline-server
-Vagrant webcon provisioning template
+# Webcon DEV Vagrant Box
+> Vagrant webcon provisioning template for developers.
+
+**WORK IN PROGRESS**
 
 # How to run?
 
