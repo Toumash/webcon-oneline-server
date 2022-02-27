@@ -1,6 +1,8 @@
 version: "3.9"
+
 services:
-  webcon-web:
+
+  webconbps:
     build: .
     restart: unless-stopped
     ports:
@@ -11,9 +13,26 @@ services:
     volumes:
       - ./source:C:/install
       - ./vendor:C:/vendor
-networks:
-  internal:
-  public:
-    driver: bridge
-volumes:
-  webcon_web:
+    # networks:
+    #   - main
+
+  sqlserver:
+    hostname: sqlserver
+    image: "mcr.microsoft.com/mssql/server"
+    ports:
+      - "1433:1433"
+    environment:
+      SA_PASSWORD: "webc0n.BPS"
+      ACCEPT_EULA: "Y"
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+    # networks:
+    #   - main
+
+# on win10 > docker network create --driver nat main
+# networks:
+#   main:
+#     driver: bridge
+
