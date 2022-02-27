@@ -1,0 +1,19 @@
+version: "3.9"
+services:
+  webcon-web:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "9000:80"
+      - "9001:443"
+    networks:
+      - public
+    volumes:
+      - ./source:C:/install
+      - ./vendor:C:/vendor
+networks:
+  internal:
+  public:
+    driver: bridge
+volumes:
+  webcon_web:
