@@ -22,7 +22,7 @@ swap=0
 
 ### Run it
 1. Clone the repo.
-2. Move your `WebconBPS.zip` to ./vendor repo dir.
+2. Move your `WebconBPS.zip` to root repo dir.
 3. Run `docker-compose up -d`.
 
 # Webcon DEV Vagrant Box
