@@ -14,9 +14,8 @@ Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V –All
 
 ## Build it
 1. Clone the repo.
-2. Move your `WebconBPS.zip` to root repo dir.
-3. Build image `docker build -t webconbps:latest .`
-4. Run container `docker run webconbps:latest --name webconbps`
+2. Move your `WebconBPS.zip` to ./vendor repo dir.
+3. Build and run using `docker compose up --build`
 
 # Webcon DEV Vagrant Box
 > Vagrant webcon provisioning template for developers.
@@ -41,3 +40,13 @@ vagrant up --provision
 |-----------------	|-----------------	|
 | Windows Machine 	| vagrant/vagrant 	|
 | SQL Server      	| sa/Vagrant42    	|
+
+
+
+# Folders on the machine
+
+
+| Path            	| Role  	|
+|-----------------	|-----------------	|
+| C:\install     	| Installation scripts 	|
+| C:\vendor      	| Additional files that the dev need to provide to successfuly build the image/box    	|
