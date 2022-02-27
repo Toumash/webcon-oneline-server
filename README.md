@@ -8,7 +8,7 @@
 Enable-WindowsOptionalFeature -Online -FeatureName containers –All
 Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V –All
 ```
-3. After reboot install Docker for Windows and install it
+3. After reboot download Docker for Windows and install it
 4. Switch docker to Windows containers
 5. In settings of the Docker Engine set `"experimental": true`
 
