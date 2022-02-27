@@ -23,3 +23,28 @@ function webcon-install {
     & $studio[0].FullName
     'StudioInstall.bat'
 }
+
+function run-setup-silent {
+    $Folder = 'C:\WebconBPS'
+    $setup = Get-ChildItem -Recurse -Path $Folder | Where-Object { $_.Name -match 'setup.exe' } | Select-Object Fullname  -First 1
+    & $setup[0].FullName --silent --sqlServer WEBCON-WEB --cfgDb BPS_Config --solrAdminUser root --solrAdminPassword root
+    'setup.exe'
+}
+
+function create-configdatabase {
+    # TODO: check if database exists before executing
+    sqlcmd -Q "CREATE DATABASE BPS_Config"
+
+    $createScript = Get-ChildItem -Recurse -Path $Folder | Where-Object { $_.Name -match 'Create_CfgDB.sql' } | Select-Object Fullname  -First 1
+
+    sqlcmd -i (Resolve-Path $createScript[0].FullName) -d BPS_Config
+}
+
+function create-maindatabase {
+    # TODO: check if database exists before executing
+    sqlcmd -Q "CREATE DATABASE BPS_Content"
+
+    $createScript = Get-ChildItem -Recurse -Path $Folder | Where-Object { $_.Name -match 'Create_MainDB.sql' } | Select-Object Fullname  -First 1
+    
+    sqlcmd -i (Resolve-Path $createScript[0].FullName) -d BPS_Content
+}
