@@ -3,22 +3,27 @@ version: "3.9"
 services:
 
   webconbps:
-    build: .
+    hostname: webconbps
+    build:
+      context: .
+      dockerfile: DockerfileWebcon
     restart: unless-stopped
     ports:
       - "9000:80"
       - "9001:443"
-    networks:
-      - public
     volumes:
       - ./source:C:/install
       - ./vendor:C:/vendor
+    command: 
+      - powershell.exe -command "& { . C:\dockerbuild.ps1; webcon-install }"; ping -t localhost
     # networks:
     #   - main
 
   sqlserver:
     hostname: sqlserver
-    image: "mcr.microsoft.com/mssql/server"
+    build:
+      context: .
+      dockerfile: DockerfileMSSQL
     ports:
       - "1433:1433"
     environment:
