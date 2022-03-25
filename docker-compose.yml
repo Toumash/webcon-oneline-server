@@ -4,18 +4,16 @@ services:
 
   webconbps:
     hostname: webconbps
-    build:
-      context: .
-      dockerfile: DockerfileWebcon
+    build: .
     restart: unless-stopped
     ports:
       - "9000:80"
       - "9001:443"
-    volumes:
-      - ./source:C:/install
-      - ./vendor:C:/vendor
-    command: 
-      - powershell.exe -command "& { . C:\dockerbuild.ps1; webcon-install }"; ping -t localhost
+    # volumes:
+    #   - ./source:C:/install
+    #   - ./vendor:C:/vendor
+    # command: 
+    #   - powershell.exe -command "& { . C:\dockerbuild.ps1; webcon-install }"; ping -t localhost
     # networks:
     #   - main
 

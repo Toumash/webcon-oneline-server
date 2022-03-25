@@ -8,19 +8,20 @@ function prerequisites {
 }
 
 function webcon-install {
-    Start-Sleep -s 30
+    #Start-Sleep -s 30
 
     $Folder = 'C:\WebconBPS'
+
     Invoke-Sqlcmd -Query "CREATE DATABASE BPS_Config" -ServerInstance "sqlserver" -Username "sa" -Password "webc0n.BPS"
-    $createScript = Get-ChildItem -Recurse -Path $Folder | Where-Object { $_.Name -match 'Create_CfgDB.sql' } | Select-Object Fullname  -First 1
-    Invoke-Sqlcmd -InputFile (Resolve-Path $createScript[0].FullName) -Database BPS_Config -ServerInstance "sqlserver" -Username "sa" -Password "webc0n.BPS"
+    $createScript = Get-ChildItem -Recurse -Path $Folder | Where-Object { $_.Name -match 'Create_CfgDB.sql' } | Select-Object -ExpandProperty "FullName"
+    Invoke-Sqlcmd -InputFile $createScript -Database "BPS_Config" -ServerInstance "sqlserver" -Username "sa" -Password "webc0n.BPS"
 
     Invoke-Sqlcmd -Query "CREATE DATABASE BPS_Content" -ServerInstance "sqlserver" -Username "sa" -Password "webc0n.BPS"
-    $createScript = Get-ChildItem -Recurse -Path $Folder | Where-Object { $_.Name -match 'Create_MainDB.sql' } | Select-Object Fullname  -First 1
-    Invoke-Sqlcmd -InputFile (Resolve-Path $createScript[0].FullName) -Database BPS_Content -ServerInstance "sqlserver" -Username "sa" -Password "webc0n.BPS"
+    $createScript = Get-ChildItem -Recurse -Path $Folder | Where-Object { $_.Name -match 'Create_MainDB.sql' } | Select-Object -ExpandProperty "FullName"
+    Invoke-Sqlcmd -InputFile $createScript -Database "BPS_Content" -ServerInstance "sqlserver" -Username "sa" -Password "webc0n.BPS"
 
-    $setup = Get-ChildItem -Recurse -Path $Folder | Where-Object { $_.Name -match 'setup.exe' } | Select-Object Fullname  -First 1
-    Start-Process -wait -FilePath (Resolve-Path $setup[0].FullName) -ArgumentList '--silent','--sqlServer sqlserver','--cfgDb BPS_Config','--solrAdminUser solr','--solrAdminPassword qwerty','--sqlLogin sa','--sqlPassword webc0n.BPS'
+    $setup = Get-ChildItem -Recurse -Path $Folder | Where-Object { $_.Name -match 'setup.exe' } | Select-Object Fullname  -First 1 | Select-Object -ExpandProperty "FullName"
+    Start-Process -wait -FilePath $setup -ArgumentList '--silent','--sqlServer sqlserver','--cfgDb BPS_Config','--solrAdminUser solr','--solrAdminPassword qwerty','--sqlLogin sa','--sqlPassword webc0n.BPS'
     # $workflowService = Get-ChildItem -Recurse -Path $Folder | Where-Object { $_.Name -match 'WebCon.WorkFlow.Service.Installer.msi' } | Select-Object Fullname  -First 1
     # msiexec /i (Resolve-Path $workflowService[0].FullName) /QN /L*V C:\msilog.log /norestart
     # 'WebCon.WorkFlow.Service.Installer.msi'
